@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080f20">
+<title>Trend AI — генератор трендов</title>
+<style>
+:root{--bg:#080f20;--panel:#101b32;--panel2:#14213d;--line:#26385d;--text:#f3f6ff;--muted:#9aabd0;--blue:#2f7bff;--cyan:#26d8ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#14254b 0,#080f20 48%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input{font:inherit}button{cursor:pointer}.app{max-width:920px;margin:auto;padding:18px 16px 100px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 22px}.brand{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:850;letter-spacing:-.7px}.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(145deg,var(--cyan),var(--blue) 60%,#845bff);display:grid;place-items:center;font-size:22px;box-shadow:0 0 24px #287aff55}.credits{background:#12284c;border:1px solid #2c65bd;border-radius:999px;padding:10px 14px;color:white;font-weight:750;white-space:nowrap}
+.search{width:100%;padding:15px 17px;border:1px solid var(--line);border-radius:18px;background:#111d35;color:white;outline:none;margin-bottom:17px}.categories{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:26px}.cat{border:1px solid var(--line);border-radius:15px;background:#111c32;color:#dce6ff;padding:13px 4px;font-size:12px}.cat span{display:block;font-size:22px;margin-bottom:7px}.cat.active{border-color:var(--cyan);background:#12366d;box-shadow:0 0 18px #1688ff22}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0 15px}.section-head h2{font-size:22px;margin:0;letter-spacing:-.5px}.sub{color:var(--muted);font-size:13px;margin-top:6px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.card{background:linear-gradient(160deg,#172541,#0c1528);border:1px solid #2a3a5b;border-radius:18px;overflow:hidden;min-width:0}.art{height:190px;display:grid;place-items:center;position:relative;overflow:hidden;background:linear-gradient(145deg,#223e68,#111a2d)}.art:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:#48b9ff22;filter:blur(20px);top:-55px;right:-50px}.emoji{font-size:76px;filter:drop-shadow(0 12px 18px #0008);z-index:1}.pill{position:absolute;left:10px;top:10px;background:#2779ff;color:#fff;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:750;z-index:2}.card-body{padding:12px}.card h3{font-size:15px;line-height:1.3;margin:0 0 6px}.card p{color:var(--muted);font-size:12px;line-height:1.4;margin:0 0 12px}.card-foot{display:flex;align-items:center;justify-content:space-between;gap:6px}.cost{color:#b6c9ef;font-size:12px}.primary,.secondary{border:0;border-radius:13px;padding:11px 13px;font-weight:750}.primary{background:linear-gradient(110deg,#286dff,#238df8);color:white;box-shadow:0 6px 18px #247aff30}.secondary{background:#1b2944;color:#dbe7ff;border:1px solid #304366}.wide{width:100%}.note{color:var(--muted);font-size:12px;line-height:1.5;margin:18px 2px}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#091225ed;backdrop-filter:blur(14px);border-top:1px solid #233454;padding:10px max(14px,env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:10px;z-index:5}.bottom button{flex:1;max-width:180px;background:transparent;color:#9eafd3;border:0;padding:7px 2px;font-size:11px}.bottom button strong{display:block;font-size:20px;margin-bottom:3px;color:#dce7ff}.bottom button.active{color:#4d9aff}
+.modal{position:fixed;inset:0;background:#020611d9;display:none;align-items:flex-end;justify-content:center;z-index:10;padding:14px}.modal.open{display:flex}.sheet{width:100%;max-width:560px;max-height:90vh;overflow:auto;background:#101b31;border:1px solid #2d4167;border-radius:24px;padding:19px}.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.sheet h2{font-size:22px;margin:0}.x{border:0;border-radius:10px;background:#263551;color:white;padding:8px 12px}.upload{display:block;text-align:center;border:1.5px dashed #3b6098;border-radius:18px;background:#0b1529;padding:20px;margin:18px 0;color:#dce8ff}.upload input{display:block;width:100%;margin-top:12px;font-size:13px}.preview{display:none;width:100%;max-height:330px;object-fit:contain;border-radius:15px;background:#060b15;margin:12px 0}.selected{color:#a9c6ff;font-size:13px;margin-top:12px}.toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#243758;color:#fff;padding:12px 16px;border-radius:12px;display:none;z-index:20;max-width:90%;font-size:13px}
+@media(min-width:650px){.app{padding-top:28px}.art{height:240px}.emoji{font-size:92px}.card h3{font-size:17px}.card-body{padding:15px}.categories{gap:12px}.cat{font-size:14px}.sheet{align-self:center;border-radius:24px}}
+@media(max-width:370px){.brand{font-size:21px}.categories{gap:5px}.cat{font-size:10px}.art{height:150px}.emoji{font-size:62px}.card-body{padding:10px}.card h3{font-size:13px}.primary{padding:9px 10px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand"><div class="logo">✦</div><div>TREND <span style="color:#398cff">AI</span></div></div><div class="credits">💎 <span id="creditCount">15</span></div></header>
+<input id="search" class="search" placeholder="⌕  Найти тренд" aria-label="Найти тренд">
+<div class="categories" id="categories">
+<button class="cat active" data-filter="Все"><span>▦</span>Все</button>
+<button class="cat" data-filter="Видео"><span>▷</span>Видео</button>
+<button class="cat" data-filter="Фото"><span>▧</span>Фото</button>
+<button class="cat" data-filter="Мемы"><span>☻</span>Мемы</button>
+<button class="cat" data-filter="Мода"><span>♧</span>Мода</button>
+</div>
+<div class="section-head"><div><h2>🔥 Сейчас в тренде</h2><div class="sub">Выбери эффект и добавь своё фото</div></div></div>
+<div class="grid" id="trendGrid"></div>
+<p class="note">Демонстрационная версия: карточки, загрузка фото и баланс работают локально. Реальная генерация AI, сохранение аккаунта и платежи ещё не подключены.</p>
+</div>
+<nav class="bottom">
+<button class="active" data-tab="home"><strong>⌂</strong>Главная</button>
+<button data-tab="works"><strong>▧</strong>Мои работы</button>
+<button data-tab="favorites"><strong>♡</strong>Избранное</button>
+<button data-tab="profile"><strong>♙</strong>Профиль</button>
+</nav>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+<div class="sheet">
+<div class="sheet-head"><h2 id="modalTitle">Создать тренд</h2><button class="x" id="closeModal">Закрыть ✕</button></div>
+<p class="sub" id="modalDesc">Загрузи фотографию, на которой хорошо видно лицо.</p>
+<label class="upload">📷 Выбрать фотографию<input type="file" id="photoInput" accept="image/*"></label>
+<img id="preview" class="preview" alt="Предварительный просмотр выбранной фотографии">
+<div class="selected" id="selectedInfo">Фотография останется в этом окне и не отправляется на сервер в демоверсии.</div>
+<button class="primary wide" id="generateBtn" style="margin-top:16px">Продолжить</button>
+<p class="note">Настоящая AI-генерация будет добавлена следующим этапом. Не загружай конфиденциальные фотографии в демонстрационные сервисы.</p>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+const trends=[
+{id:'angel',title:'Ангел на подиуме',desc:'Редакционная fashion-съёмка',cat:'Фото',emoji:'🪽',bg:'linear-gradient(145deg,#526b9c,#18233c)',cost:3,tag:'ПОПУЛЯРНО'},
+{id:'movie',title:'Главный герой фильма',desc:'Кинематографичный ролик',cat:'Видео',emoji:'🚘',bg:'linear-gradient(145deg,#7c343c,#141d31)',cost:8,tag:'ВИДЕО'},
+{id:'wind',title:'Ветер свободы',desc:'Динамичный модный кадр',cat:'Видео',emoji:'🌬️',bg:'linear-gradient(145deg,#4a92c8,#182a48)',cost:8,tag:'НОВИНКА'},
+{id:'meme',title:'Мем-перевоплощение',desc:'Забавный эффект с твоим лицом',cat:'Мемы',emoji:'😳',bg:'linear-gradient(145deg,#95694b,#29223a)',cost:3,tag:'ВИРУСНО'},
+{id:'cover',title:'Обложка журнала',desc:'Глянцевый журнальный портрет',cat:'Мода',emoji:'✨',bg:'linear-gradient(145deg,#73568f,#17213c)',cost:3,tag:'СТИЛЬ'},
+{id:'dream',title:'Сон в облаках',desc:'Мягкий сказочный портрет',cat:'Фото',emoji:'☁️',bg:'linear-gradient(145deg,#6099c7,#34365e)',cost:3,tag:'AI PHOTO'}
+];
+let filter='Все', selected=null, photoUrl=null, favorites=new Set(), demoCredits=15;
+const grid=document.getElementById('trendGrid');
+function render(){
+ const q=document.getElementById('search').value.toLowerCase().trim();
+ const items=trends.filter(t=>(filter==='Все'||t.cat===filter)&&(t.title.toLowerCase().includes(q)||t.desc.toLowerCase().includes(q)));
+ grid.innerHTML=items.map(t=>`<article class="card"><div class="art" style="background:${t.bg}"><span class="pill">${t.tag}</span><span class="emoji">${t.emoji}</span></div><div class="card-body"><h3>${t.title}</h3><p>${t.desc}</p><div class="card-foot"><span class="cost">💎 ${t.cost} кредита</span><button class="primary" data-create="${t.id}">Создать</button></div><button class="secondary wide" data-fav="${t.id}" style="margin-top:8px">${favorites.has(t.id)?'♥ В избранном':'♡ В избранное'}</button></div></article>`).join('');
+ if(!items.length)grid.innerHTML='<p class="note">Ничего не найдено. Попробуй другой запрос.</p>';
+}
+document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.filter;document.querySelectorAll('.cat').forEach(x=>x.classList.toggle('active',x===b));render()}));
+document.getElementById('search').addEventListener('input',render);
+grid.addEventListener('click',e=>{
+ const c=e.target.closest('[data-create]'),f=e.target.closest('[data-fav]');
+ if(f){const id=f.dataset.fav;favorites.has(id)?favorites.delete(id):favorites.add(id);render();return}
+ if(c){selected=trends.find(t=>t.id===c.dataset.create);openModal()}
+});
+function openModal(){document.getElementById('modalTitle').textContent=selected.title;document.getElementById('modalDesc').textContent=`${selected.desc}. Демоверсия: стоимость ${selected.cost} кредита, списание пока не производится.`;document.getElementById('photoInput').value='';document.getElementById('preview').style.display='none';document.getElementById('selectedInfo').textContent='Выбери фотографию, на которой хорошо видно лицо.';document.getElementById('generateBtn').textContent='Продолжить';document.getElementById('modal').classList.add('open')}
+document.getElementById('closeModal').onclick=()=>document.getElementById('modal').classList.remove('open');
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')document.getElementById('modal').classList.remove('open')});
+document.getElementById('photoInput').addEventListener('change',e=>{
+ const file=e.target.files&&e.target.files[0];if(!file)return;
+ if(!file.type.startsWith('image/')){showToast('Пожалуйста, выбери файл изображения.');return}
+ if(file.size>12*1024*1024){showToast('Для демоверсии выбери фото меньше 12 МБ.');e.target.value='';return}
+ if(photoUrl)URL.revokeObjectURL(photoUrl);photoUrl=URL.createObjectURL(file);
+ const img=document.getElementById('preview');img.src=photoUrl;img.style.display='block';
+ document.getElementById('selectedInfo').textContent=`Выбрано: ${file.name} · ${(file.size/1024/1024).toFixed(1)} МБ`;
+ document.getElementById('generateBtn').textContent='Проверить демо-генерацию';
+});
+document.getElementById('generateBtn').onclick=()=>{
+ if(!document.getElementById('photoInput').files.length){showToast('Сначала выбери фотографию.');return}
+ showToast('Загрузка фото работает. Настоящую AI-генерацию подключим следующим этапом.');
+ document.getElementById('generateBtn').textContent='Фото выбрано ✓';
+};
+document.querySelectorAll('.bottom button').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('.bottom button').forEach(x=>x.classList.toggle('active',x===b));
+ const tab=b.dataset.tab;
+ if(tab==='home'){filter='Все';document.getElementById('search').value='';document.querySelectorAll('.cat').forEach(x=>x.classList.toggle('active',x.dataset.filter==='Все'));render();window.scrollTo({top:0,behavior:'smooth'})}
+ else if(tab==='favorites'){const items=trends.filter(t=>favorites.has(t.id));grid.innerHTML=items.length?items.map(t=>`<article class="card"><div class="art" style="background:${t.bg}"><span class="emoji">${t.emoji}</span></div><div class="card-body"><h3>${t.title}</h3><button class="primary wide" data-create="${t.id}">Создать</button></div></article>`).join(''):'<p class="note">Пока нет избранных трендов. Нажми ♡ на карточке.</p>';document.querySelector('.section-head h2').textContent='♡ Избранное'}
+ else if(tab==='works'){showToast('История появится после подключения базы данных.')}
+ else if(tab==='profile'){showToast('Профиль и реальный баланс подключим следующим этапом.')}
+}));
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',3200)}
+render();
+</script>
+</body>
+</html>
